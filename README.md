@@ -1,4 +1,4 @@
-# Aria - Context Registry Node
+# Context Registry Node
 
 A lightweight PyQt6 desktop utility for storing, browsing, and copying context text blocks to the clipboard. Context entries are versioned and persisted in a local JSON database.
 
