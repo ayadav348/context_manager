@@ -35,23 +35,47 @@ brew install pyqt@6
 python3 context_manager.py
 ```
 
-### KDE Taskbar Pin
+### KDE Desktop Integration (Taskbar Pin)
 
-1. Make the script executable:
-   ```bash
-   chmod +x context_manager.py
-   ```
-2. A `.desktop` file should already be installed at `~/.local/share/applications/aria-context.desktop`. If not, create it with the following content:
-   ```ini
-   [Desktop Entry]
-   Name=Aria Context Registry
-   Exec=/path/to/context_manager.py
-   Icon=/path/to/icon.svg
-   Type=Application
-   Categories=Utility;
-   ```
-3. Run `update-desktop-database ~/.local/share/applications`.
-4. Launch the app, right-click its taskbar entry, and select **Pin to Task Manager**.
+The `.desktop` file and icon must be set up correctly for KDE to show the right icon when the app is pinned to the taskbar.
+
+**1. Generate a PNG icon from the SVG:**
+
+KDE's taskbar/pin system requires a raster icon installed in the hicolor theme. The SVG alone is not reliable for pinned entries.
+
+```bash
+rsvg-convert -w 256 -h 256 icon.svg -o icon.png
+mkdir -p ~/.local/share/icons/hicolor/256x256/apps
+cp icon.png ~/.local/share/icons/hicolor/256x256/apps/aria-context.png
+```
+
+**2. Create the `.desktop` file:**
+
+Save the following to `~/.local/share/applications/aria-context.desktop`:
+
+```ini
+[Desktop Entry]
+Name=Aria Context Registry
+Exec=python3 /path/to/context_manager.py
+Icon=aria-context
+Type=Application
+Categories=Utility;
+StartupWMClass=context_manager
+StartupNotify=false
+```
+
+> Use `Icon=aria-context` (the theme name), not an absolute path to the SVG or PNG. This is what KDE uses to resolve the icon for pinned entries.
+> Use `Exec=python3 /path/to/...` rather than executing the `.py` file directly.
+
+**3. Register the desktop entry:**
+
+```bash
+update-desktop-database ~/.local/share/applications
+```
+
+**4. Pin to taskbar:**
+
+Launch the app, right-click its taskbar entry, and select **Pin to Task Manager**.
 
 ## Usage
 
